@@ -25,7 +25,7 @@ export const handleRefreshToken = async (req: Request, res: Response) => {
         res.json({accessToken:accessToken})
       });
   } catch (error) {
-   return res.json({error: "error logging in user."});
+   return res.json({error: "error refreshing Token"});
   }
 };
 
