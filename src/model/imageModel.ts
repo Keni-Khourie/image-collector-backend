@@ -7,6 +7,16 @@ const imageSchema = new Schema({
         type : mongoose.SchemaTypes.ObjectId,
         required:true,
         ref: 'Page',
+    },
+    user:{
+        type: mongoose.SchemaTypes.ObjectId,
+        required: true,
+        ref:"User"
+    },
+      createdAt:{
+        type: Date,
+        immutable: true,
+        default: ()=>Date.now()
     }
 })
 

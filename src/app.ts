@@ -8,8 +8,10 @@ import cors from 'cors';
 import indexRouter from './routes/indexRouter';
 import pageRouter from './routes/pageRouter';
 import usersRouter from './routes/users';
+import authRouter from './routes/authRouter'
+import refreshRouter from './routes/refreshRouter'
 import User from './model/userModel';
-
+import verifyJWT from './middleware/verifyJWT';
 const app = express();
 
 // view engine setup
@@ -24,6 +26,9 @@ app.use(cors());
 app.use(express.static(path.join(__dirname,"../", 'public')));
 
 app.use('/', indexRouter);
+app.use('/auth', authRouter)
+app.use('/refresh', refreshRouter)
+app.use(verifyJWT)
 app.use('/page', pageRouter)
 app.use('/users', usersRouter);
 

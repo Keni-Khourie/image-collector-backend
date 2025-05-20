@@ -17,6 +17,7 @@ const userSchema = new Schema({
         lowercase: true, 
         unique:true
     },
+    refreshToken:{type:String},
     password: {type:String, required:true},
     pages:{
         type:[mongoose.SchemaTypes.ObjectId],

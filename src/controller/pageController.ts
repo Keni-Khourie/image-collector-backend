@@ -11,14 +11,14 @@ export const getPageById = async(req:Request, res:Response)=> {}
 
 export const createPage = async(req:Request, res:Response)=>{
     const {pageName, pageUrl, pageDescription} = req.body;
-    if(!pageName || !pageUrl){
+    if(!pageUrl){
        res.json({
-      error: "page creation data incomplete",
+      error: "No Page URL supplied",
     });
     return; 
     }
 
-    const existingPage = Page.findOne({pageUrl, })
+    const existingPage = Page.findOne({pageUrl})
 
     try {
     
@@ -31,6 +31,12 @@ export const deletePage = async (req:Request, res:Response)=>{
 
     //delete all the images of a certain pageId
     // Then delete the page
+}
+export const updatePage = async(req:Request, res:Response)=>{
+    //expect a request body containing one of a url, description or name of the page.
+    //find page using user id and/or page id. from the request params
+    // if there is a description or name in the request body, update it.
+    //if there is a url, rescrape.
 }
 
 export const scrapePage = async(req:Request, res:Response)=>{

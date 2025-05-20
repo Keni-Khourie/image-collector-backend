@@ -1,6 +1,13 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import User from "../model/userModel";
+import jwt from "jsonwebtoken";
+import {config} from 'dotenv';
+
+config();
+
+const accessTokenSecret= process.env.ACCESS_TOKEN_SECRET
+const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET
 
 export const createUser = async (req: Request, res: Response) => {
   const { firstName, lastName, email, password } = req.body;
@@ -60,9 +67,22 @@ export const loginUser = async (req: Request, res: Response) => {
       existingUser.password
     );
     if (match) {
-      res.json({
-        success: "User logged in",
-      });
+      const accessToken = jwt.sign(
+        {"userId":existingUser._id},
+        accessTokenSecret!,
+        {expiresIn:"15m"}
+      )
+      const refreshToken = jwt.sign(
+        {"userId":existingUser._id},
+        refreshTokenSecret!,
+        {expiresIn:"7d"}
+      )
+      existingUser.refreshToken = refreshToken
+      await existingUser.save()
+      
+
+      res.json({accessToken:accessToken})
+      res.cookie('jwt', refreshToken, {httpOnly:true, maxAge:24* 60 * 60* 1000})
     } else{
       res.json({
         error:"incorrect password"
@@ -76,43 +96,3 @@ export const loginUser = async (req: Request, res: Response) => {
     return
   }
 };
-
-export const getUserDetails = async (req: Request, res: Response) => {};
-
-export const updateUserDetails = async (req: Request, res: Response) => {
-
-};
-
-export const deleteUser = async (req: Request, res: Response) => {
-  const userId:string = req.params.userId;
-  if(!userId){
-    res.json({
-      error: "no user id selected",
-    })
-    return
-  }
-  const existingUser = await User.findById(userId);
-  if(!existingUser){
-    res.json({
-      error: "user does not exist",
-    })
-    return
-  }
-
-  try {
-    await existingUser.deleteOne();
-    res.json({
-      success: "user has been deleted"
-    })
-  } catch (error) {
-    console.log(error);
-    res.json({
-      error: "error deleting user",
-    })
-    return
-  }
-
-};
-
-
-export const getAllUsers = async (req:Request, res:Response) =>{}

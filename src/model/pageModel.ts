@@ -12,8 +12,19 @@ const pageSchema = new Schema({
     },
     user:{
         type : mongoose.SchemaTypes.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
+    },
+      createdAt:{
+        type: Date,
+        immutable: true,
+        default: ()=>Date.now()
+    },
+    updatedAt:{
+        type: Date,
+        default: ()=>Date.now()
     }
+
 })
 
 

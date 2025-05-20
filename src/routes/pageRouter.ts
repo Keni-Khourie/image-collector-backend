@@ -1,11 +1,14 @@
 import express from 'express';
-import { createPage, deletePage, scrapePage, getAllPages, getPageById } from '../contoller/pageController';
+import { createPage, deletePage, scrapePage, getAllPages, getPageById } from '../controller/pageController';
+import verifyJWT from '../middleware/verifyJWT';
 const router = express.Router();
 
-router.get('/', getAllPages);
-router.get("/:pageId", getPageById)
-router.post('/add', createPage);
-router.delete('/delete', deletePage);
+router.get('/', verifyJWT, getAllPages);
+router.get("/:pageId",verifyJWT, getPageById)
+router.post('/add', verifyJWT, createPage);
+router.delete('/delete', verifyJWT, deletePage);
 router.post('/scrape/:pageId', scrapePage);
 
 export default router;
+
+
